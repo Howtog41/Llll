@@ -10,6 +10,7 @@ from telegram.ext import (
 from handlers.start_handler import start, help_menu
 from handlers.authorization_handler import authorize
 from handlers.myplan import myplan
+from handlers.csv_poll_to_txt import setup_csv_poll_handlers
 
 from config import TOKEN
 
@@ -22,6 +23,8 @@ def main():
     application.add_handler(CommandHandler("authorize", authorize))
     application.add_handler(CommandHandler("myplan", myplan))
     application.add_handler(CallbackQueryHandler(help_menu, pattern="^help_menu$"))
+    setup_csv_poll_handlers(application)
+
     logging.info("🚀 Bot started successfully!")
     application.run_polling()
 
