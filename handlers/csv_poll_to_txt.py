@@ -14,7 +14,6 @@ async def start_csv_poll(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-# ✅ Handle CSV → TXT
 async def handle_csv(update: Update, context: ContextTypes.DEFAULT_TYPE):
     file = await update.message.document.get_file()
     csv_file = tempfile.mktemp(suffix=".csv")
@@ -22,21 +21,33 @@ async def handle_csv(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await file.download_to_drive(csv_file)
 
-    with open(csv_file, "r", encoding="utf-8") as f, open(txt_file, "w", encoding="utf-8") as out:
+    with open(csv_file, "r", encoding="utf-8-sig") as f, open(txt_file, "w", encoding="utf-8") as out:
         reader = csv.DictReader(f)
+
         for idx, row in enumerate(reader, start=1):
-            out.write(f"{idx}. {row['Question']}\n")
-            out.write(f"A. {row['Option A']}\n")
-            out.write(f"B. {row['Option B']}\n")
-            out.write(f"C. {row['Option C']}\n")
-            out.write(f"D. {row['Option D']}\n")
-            out.write(f"{row['Answer']}\n")
-            out.write(f"{row.get('Description', '').strip()}\n\n")
+            # Convert all keys to lowercase for flexible matching
+            row_lower = {k.strip().lower(): v for k, v in row.items()}
+
+            q = row_lower.get("question", "")
+            a = row_lower.get("option a", "")
+            b = row_lower.get("option b", "")
+            c = row_lower.get("option c", "")
+            d = row_lower.get("option d", "")
+            ans = row_lower.get("answer", "")
+            desc = row_lower.get("description", "")
+
+            out.write(f"{idx}. {q}\n")
+            out.write(f"A. {a}\n")
+            out.write(f"B. {b}\n")
+            out.write(f"C. {c}\n")
+            out.write(f"D. {d}\n")
+            out.write(f"{ans}\n")
+            out.write(f"{desc}\n\n")
 
     await update.message.reply_document(open(txt_file, "rb"))
-
     os.remove(csv_file)
     os.remove(txt_file)
+
 
 
 # ✅ Handle Poll → TXT
