@@ -1,5 +1,6 @@
 import logging
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler
+from handlers.pdf_to_csv import setup_pdf_to_csv_handlers
 
 from handlers.start_handler import start, help_menu
 from handlers.authorization_handler import authorize
@@ -23,6 +24,10 @@ def main():
 
     # MCQ → CSV system
     add_mcq_csv_handlers(application)
+
+    # PDF → CSV (AI based)
+    setup_pdf_to_csv_handlers(application)
+
 
     logging.info("🚀 Bot started successfully!")
     application.run_polling()
