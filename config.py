@@ -4,7 +4,7 @@ import os
 MONGO_URI = os.getenv("MONGO_URI", "")
 
 # Telegram Bot Token
-TOKEN = os.getenv("BOT_TOKEN", "")
+TOKEN = os.getenv("TOKEN", "")
 
 # Admin ID (int me convert zaroori)
 ADMIN_ID = int(os.getenv("ADMIN_ID", "5018200809"))
